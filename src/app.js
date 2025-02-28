@@ -37,6 +37,12 @@ app.use((req, res) => {                            //we want to keep the genral 
     res.send("hello i am server...!")              //we dont want to use, app.use("/") for routing, because it will catch all the routes like get,put,post 
 });                                                //To overcome this we want to use app.get("/user"), app.post("/user")
 
+
+app.use("/", (err,req,res,next) => {
+    if(err) {
+        res.status(500).send("something went wrong...!")
+    }
+})
 app.listen(7777, () => {                           //creating the port (port is nothing but a server...!)
     console.log("Hello from the server......!")
 })
