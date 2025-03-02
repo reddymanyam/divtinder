@@ -2,9 +2,13 @@ const express = require("express");
 
 const app = express();
 
+const {audminAuth} = require('./middlewares/auth');
+
 // app.get("/user", (req, res) => {                      
 //     res.send({"firstname":"reddy", "secondname":"manyam"})
 // });
+
+app.use('/admin', audminAuth);
 
 app.get('/user', (req, res, next) => {
     console.log("this is user response...!");
@@ -12,7 +16,7 @@ app.get('/user', (req, res, next) => {
     next();
 },
     (req, res) => {
-        res.send("response 2") 
+        res.send("response 2")
     }
 );
 
@@ -38,8 +42,8 @@ app.use((req, res) => {                            //we want to keep the genral 
 });                                                //To overcome this we want to use app.get("/user"), app.post("/user")
 
 
-app.use("/", (err,req,res,next) => {
-    if(err) {
+app.use("/", (err, req, res, next) => {
+    if (err) {
         res.status(500).send("something went wrong...!")
     }
 })
