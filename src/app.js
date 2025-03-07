@@ -1,7 +1,25 @@
 const express = require("express");
-
 const connectDB = require('./config/database');
 const app = express();
+const User = require('./model/user');
+
+app.post('/signup', async(req,res)=>{
+  
+    const user = new User({
+        "firstName" : "Reddy",
+        "lastName" : "Manyam",
+        "email":"Reddy123@gmail.com",
+        "password":"Reddy@1854425"
+    })
+
+    try{
+        user.save();
+        res.send("data saved succesfully")
+    }
+    catch(err){
+        console.log("Data is not sent successfully");
+    }
+})
 
 connectDB()
     .then(() => {
