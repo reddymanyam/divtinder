@@ -9,7 +9,7 @@ app.post('/signup', async(req,res)=>{
   
     const user = new User({
         "firstName" : "Reddy",
-        "lastName" : "Manyam",
+        "lastName" : "Roy",
         "email":"Reddy123@gmail.com",
         "password":"Reddy@1854425"
     })
