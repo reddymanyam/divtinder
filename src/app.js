@@ -5,20 +5,32 @@ const User = require('./model/user');
 
 app.use(express.json());
 
+// app.post('/signup', async (req, res) => {
+
+
+//     const user = new User(req.body);
+//     console.log(req.body);
+
+//     try {
+//         await user.save();
+//         res.send("data saved succesfully")
+//     }
+//     catch (err) {
+//         console.log("Data is not sent successfully");
+//     }
+// })
+
 app.post('/signup', async (req, res) => {
-
-
-    const user = new User(req.body);
-    console.log(req.body);
-
     try {
-        user.save();
-        res.send("data saved succesfully")
+        const user = new User(req.body);
+        await user.save(); // Use await to ensure it completes
+        console.log("Data saved successfully:", user);
+        res.status(201).send("Data saved successfully");
+    } catch (err) {
+        console.error("Data is not sent successfully:", err);
+        res.status(500).send("Internal Server Error");
     }
-    catch (err) {
-        console.log("Data is not sent successfully");
-    }
-})
+});
 
 connectDB()
     .then(() => {
