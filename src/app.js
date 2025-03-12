@@ -5,20 +5,17 @@ const User = require('./model/user');
 
 app.use(express.json());
 
-app.post('/signup', async(req,res)=>{
-  
-    const user = new User({
-        "firstName" : "Reddy",
-        "lastName" : "Roy",
-        "email":"Reddy123@gmail.com",
-        "password":"Reddy@1854425"
-    })
+app.post('/signup', async (req, res) => {
 
-    try{
+
+    const user = new User(req.body);
+    console.log(req.body);
+
+    try {
         user.save();
         res.send("data saved succesfully")
     }
-    catch(err){
+    catch (err) {
         console.log("Data is not sent successfully");
     }
 })
