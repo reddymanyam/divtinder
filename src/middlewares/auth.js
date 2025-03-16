@@ -5,7 +5,7 @@ const audminAuth = (req, res, next) => {
     if (!isAuthenticated) {
         res.status(402).send("authentication failed");
     } else {
-        next();
+        next()
     }
 }
 
