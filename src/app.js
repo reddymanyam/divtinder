@@ -32,6 +32,20 @@ app.post('/signup', async (req, res) => {
     }
 });
 
+// Getting the data of the one person based on the email id
+
+app.get('/user', async (req, res) => {
+    
+    const emailId = req.body.email;
+    try {
+        const users = await User.findOneAndDelete({email : emailId});
+        res.status(200).send(users); 
+    }
+    catch (err) {
+        res.status(401).send("something went wrong")
+    }
+})
+
 connectDB()
     .then(() => {
         console.log("database connection established..!");
