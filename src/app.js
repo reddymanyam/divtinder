@@ -33,16 +33,50 @@ app.post('/signup', async (req, res) => {
 });
 
 // Getting the data of the one person based on the email id
-
 app.get('/user', async (req, res) => {
-    
+
     const emailId = req.body.email;
     try {
-        const users = await User.findOneAndDelete({email : emailId});
-        res.status(200).send(users); 
+        const users = await User.findOneAndDelete({ email: emailId });
+        if (users.length === 0) {
+            res.status(400).send("user not found...!");
+        } else {
+            res.status(200).send(users);
+        }
     }
     catch (err) {
         res.status(401).send("something went wrong")
+    }
+})
+
+// Getting the data of the person by the Id(mongodb genrated id)
+app.get('/users', async (req, res) => {
+
+    const mongoId = req.body._id;
+    try {
+        const users = await User.findById({ _id: mongoId });
+        if (users.length === 0) {
+            res.status(400).send("user is not found");
+        } else {
+            res.status(200).send(users)
+        }
+    } catch (err) {
+        res.status(400).send("Something went Wrong...!");
+    }
+})
+
+// Getting all the data from the database
+app.get('/feed', async (req, res) => {
+    try {
+        const users = await User.find({});
+        if (!users || users.length === 0) {
+            return res.status(404).send("No users found");
+        }
+        res.status(200).send(users);
+    }
+    catch (err) {
+        console.error("Error fetching users:", err);
+        res.status(500).send("Something Went Wrong...!");
     }
 })
 
