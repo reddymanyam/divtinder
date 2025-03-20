@@ -17,6 +17,7 @@ app.get('/users', async (req, res) => {
 app.post('/users', async (req, res) => {
 
     try {
+
         const users = new User(req.body);
         await users.save();
         res.status(200).json(users);
@@ -33,6 +34,14 @@ app.patch('/users/:id', async (req, res) => {
     const updatedData = req.body;
 
     try {
+
+        const ALLOWED_UPDATES = ["userId", "firstName", "lastName", "skills", "about"];
+        const isAllowedUpdates = Object.keys(updatedData).every((k) => ALLOWED_UPDATES.includes(k));
+
+        if (!isAllowedUpdates) {
+            throw new Error("update not allowed");
+        }
+
         const users = await User.findOneAndUpdate({ _id: reqId }, updatedData, {
             returnDocument: "after",
             returnValidators: true,
