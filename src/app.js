@@ -2,6 +2,9 @@ const express = require("express");
 const connectDB = require('./config/database');
 const app = express();
 const User = require('./model/user');
+require('dotenv').config();
+
+const PORT = process.env.PORT;
 
 app.use(express.json());
 
@@ -75,8 +78,8 @@ app.delete('/users/:id', async (req, res) => {
 connectDB()
     .then(() => {
         console.log("database connection established..!");
-        app.listen(7777, () => {                           //creating the port (port is nothing but a server...!)
-            console.log("Hello from the server......!")
+        app.listen(PORT, () => {                           //creating the port (port is nothing but a server...!)
+            console.log(`Server is running at PORT:${PORT}`)
         })
     })
     .catch((err) => {
