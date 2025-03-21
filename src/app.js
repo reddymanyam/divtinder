@@ -3,6 +3,8 @@ const connectDB = require('./config/database');
 const app = express();
 const User = require('./model/user');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
 const { validationSignUp } = require('./utils/validation');
 
@@ -69,21 +71,39 @@ app.post('/login', async (req, res) => {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email: email });
-        console.log(user);
+        // console.log(user);
 
         if (!user) {
             throw new Error("Invalid Credentials")
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            throw new Error("Invalid Creditials");
+
+        if (isPasswordValid) {
+
+            // create a JWT token
+
+            // add a token to the cookie and send the response back to the user
+            res.cookie("token", "abcdefghijklmnopqrstuvwxyz");
+            console.log(token);
+            res.send("logged in succesfull")
+            // res.status(200).json({ message: "User Logged in Successfully" })
+
         } else {
-            res.status(200).json({ message: "User Logged in Successfully" })
+            throw new Error("Invalid Creditials");
         }
 
     } catch (err) {
         res.status(500).json({ message: "something went wrong", error: err.message })
+    }
+})
+
+app.get('/profile', async (req, res) => {
+
+    try {
+
+    } catch (err) {
+        res.status(500).send({ message: "Something went Wrong", err })
     }
 })
 
