@@ -13,6 +13,7 @@ require('dotenv').config();
 const PORT = process.env.PORT;
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.get('/users', async (req, res) => {
     try {
@@ -66,42 +67,50 @@ app.post('/signup', async (req, res) => {
 );
 
 app.post('/login', async (req, res) => {
-
     try {
         const { email, password } = req.body;
+        const user = await User.findOne({ email });
+        const user_id = user._id;
 
-        const user = await User.findOne({ email: email });
-        // console.log(user);
+        console.log("User Found:", user);
 
         if (!user) {
-            throw new Error("Invalid Credentials")
+            throw new Error("Invalid Credentials");
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log("Password Match:", isPasswordValid);
 
         if (isPasswordValid) {
 
-            // create a JWT token
+            // Generate JWT token
+            const token = await jwt.sign({ _id: user_id }, "Reddy@#123");
+            console.log("token is...", token);
 
-            // add a token to the cookie and send the response back to the user
-            res.cookie("token", "abcdefghijklmnopqrstuvwxyz");
-            console.log(token);
-            res.send("logged in succesfull")
-            // res.status(200).json({ message: "User Logged in Successfully" })
-
+            // Set the token in a cookie
+            res.cookie("token", "reddyfirstcookietokengeneration");
+            res.send("Login Succesful!!!");
         } else {
-            throw new Error("Invalid Creditials");
+            throw new Error("Invalid Credentials")
         }
 
     } catch (err) {
-        res.status(500).json({ message: "something went wrong", error: err.message })
+        res.status(500).json({ message: "Something went wrong", error: err.message });
     }
-})
+});
+
 
 app.get('/profile', async (req, res) => {
 
     try {
+        const cookies = req.cookies;
+        console.log("cookies are ", cookies);
 
+        const { token } = cookies;
+
+        //token validation
+
+        res.send("Reading cookie")
     } catch (err) {
         res.status(500).send({ message: "Something went Wrong", err })
     }
