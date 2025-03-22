@@ -54,7 +54,7 @@ app.post('/signup', async (req, res) => {
         validationSignUp(req);
 
         // password encryption
-        const hashPassword = await bcrypt.hash(password, 10);
+        const hashPassword = await bcrypt.hash(password, 10);  // creating a hashpassword (password, saltNumber)
         // console.log(hashPassword);
 
         const users = new User({ firstName, lastName, email, password: hashPassword });
@@ -70,7 +70,7 @@ app.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        const user_id = user._id;
+        // const user_id = user._id;
 
         console.log("User Found:", user);
 
@@ -84,11 +84,11 @@ app.post('/login', async (req, res) => {
         if (isPasswordValid) {
 
             // Generate JWT token
-            const token = await jwt.sign({ _id: user_id }, "Reddy@#123");
+            const token = await jwt.sign({ _id: user._id }, "Reddy@#123");  //hiddencode and secret number
             console.log("token is...", token);
 
             // Set the token in a cookie
-            res.cookie("token", "reddyfirstcookietokengeneration");
+            res.cookie("token", token);       
             res.send("Login Succesful!!!");
         } else {
             throw new Error("Invalid Credentials")
@@ -103,12 +103,21 @@ app.post('/login', async (req, res) => {
 app.get('/profile', async (req, res) => {
 
     try {
-        const cookies = req.cookies;
-        console.log("cookies are ", cookies);
+        const cookies = req.cookies;   // Getting Cookies Value
+        console.log("cookie is-----", cookies);
 
-        const { token } = cookies;
+        const { token } = cookies;     // Getting token value from cookies
+        if (!token) {
+            res.status(401).json({ message: "Unauthorized: No token provided" })
+        }
+        console.log("token is--------", token);
+
 
         //token validation
+        const decoded = jwt.verify(token, "Reddy@#123");
+        console.log("decoded is ----------", decoded);
+
+        const { _id } = decoded;
 
         res.send("Reading cookie")
     } catch (err) {
