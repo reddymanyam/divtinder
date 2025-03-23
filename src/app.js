@@ -85,11 +85,11 @@ app.post('/login', async (req, res) => {
         if (isPasswordValid) {
 
             // Generate JWT token
-            const token = await jwt.sign({ _id: user._id }, "Reddy@#123");  //hiddencode and secret number
+            const token = await jwt.sign({ _id: user._id }, "Reddy@#123", { expiresIn: '1h' });  //hiddencode and secret number
             console.log("token is...", token);
 
             // Set the token in a cookie
-            res.cookie("token", token);
+            res.cookie("token", token, { expires: new Date(Date.now() + 900000), httpOnly: true });
             res.send("Login Succesful!!!");
         } else {
             throw new Error("Invalid Credentials")
@@ -108,6 +108,17 @@ app.get('/profile', adminAuth, async (req, res) => {
         res.send(user);
     } catch (err) {
         res.status(500).send({ message: "Something went Wrong", err })
+    }
+});
+
+app.post('/sendConnectionRequest', adminAuth, async (req, res) => {
+    try {
+        user = req.user;
+        const { firstName } = user;
+
+        res.status(201).send(firstName + "sent the connection request")
+    } catch (err) {
+        res.status(500).json({ message: "something went wrong", err: err.message });
     }
 })
 
