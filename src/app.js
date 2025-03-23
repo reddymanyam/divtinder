@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 
 const { validationSignUp } = require('./utils/validation');
+const { adminAuth } = require('./middlewares/auth');
 
 require('dotenv').config();
 
@@ -88,7 +89,7 @@ app.post('/login', async (req, res) => {
             console.log("token is...", token);
 
             // Set the token in a cookie
-            res.cookie("token", token);       
+            res.cookie("token", token);
             res.send("Login Succesful!!!");
         } else {
             throw new Error("Invalid Credentials")
@@ -125,7 +126,7 @@ app.get('/profile', async (req, res) => {
     }
 })
 
-app.patch('/users/:id', async (req, res) => {
+app.patch('/users/:id', adminAuth, async (req, res) => {
 
     const reqId = req.params.id;
     const updatedData = req.body;
