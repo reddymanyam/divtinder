@@ -101,32 +101,17 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', adminAuth, async (req, res) => {
 
     try {
-        const cookies = req.cookies;   // Getting Cookies Value
-        console.log("cookie is-----", cookies);
-
-        const { token } = cookies;     // Getting token value from cookies
-        if (!token) {
-            res.status(401).json({ message: "Unauthorized: No token provided" })
-        }
-        console.log("token is--------", token);
-
-
-        //token validation
-        const decoded = jwt.verify(token, "Reddy@#123");
-        console.log("decoded is ----------", decoded);
-
-        const { _id } = decoded;
-
-        res.send("Reading cookie")
+        const user = req.user;
+        res.send(user);
     } catch (err) {
         res.status(500).send({ message: "Something went Wrong", err })
     }
 })
 
-app.patch('/users/:id', adminAuth, async (req, res) => {
+app.patch('/users/:id', async (req, res) => {
 
     const reqId = req.params.id;
     const updatedData = req.body;
