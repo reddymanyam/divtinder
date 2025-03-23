@@ -1,6 +1,12 @@
-const audminAuth = (req, res, next) => {
-    const token = "xyz";
-    const isAuthenticated = token === "xyz";
+const jwt = require('jsonwebtoken');
+
+
+const adminAuth = (req, res, next) => {
+
+    const cookies = req.cookies;
+    const { token } = cookies;
+
+    const isAuthenticated = jwt.verify(token, "Reddy@#123");
 
     if (!isAuthenticated) {
         res.status(402).send("authentication failed");
@@ -9,4 +15,4 @@ const audminAuth = (req, res, next) => {
     }
 }
 
-module.exports= {audminAuth};
+module.exports = { adminAuth };
