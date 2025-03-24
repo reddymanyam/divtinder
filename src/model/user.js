@@ -34,8 +34,8 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        validate(value){
-            if(!validator.isStrongPassword(value)){
+        validate(value) {
+            if (!validator.isStrongPassword(value)) {
                 throw new Error("Enter the strong password");
             }
         }
@@ -62,5 +62,14 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+userSchema.method.getJWT = async function () {
+
+    const user = this;
+
+    // Generate JWT token
+    const token = await jwt.sign({ _id: user._id }, "Reddy@#123", { expiresIn: '1h' });  //hiddencode and secret number and expires time
+    return token;
+}
 
 module.exports = mongoose.model('user', userSchema);
