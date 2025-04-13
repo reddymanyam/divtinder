@@ -169,4 +169,4 @@ requestRouter.get('/admin/allRequests', adminAuth, async (req, res) => {
     }
 });
 
-module.exports = { requestRouter };
+module.exports = requestRouter;
